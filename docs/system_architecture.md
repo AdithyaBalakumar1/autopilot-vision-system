@@ -18,6 +18,7 @@ Camera Input → Perception → Planning → Control → Simulated Output
 
 ### Perception Module
 The perception module is responsible for understanding the driving scene from visual input.
+- Classical lane detection with ROI masking for noise reduction
 
 Functions:
 - Lane detection
