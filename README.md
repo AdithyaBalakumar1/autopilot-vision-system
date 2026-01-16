@@ -37,3 +37,13 @@ tests/ # Validation
 ## Disclaimer
 This project is strictly for educational and research purposes.
 It is not intended for deployment in real vehicles.
+## Demo
+
+The system processes a road video stream and outputs:
+- Detected lane boundaries
+- Detected vehicles (YOLOv5)
+- Real-time FPS overlay
+
+An example output video is generated as:
+output_autopilot_demo.mp4
+Run the pipeline and press `Esc` to stop and save the output.
