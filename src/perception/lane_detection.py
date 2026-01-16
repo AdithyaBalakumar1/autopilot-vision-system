@@ -8,6 +8,24 @@ in road images using OpenCV.
 import cv2
 import numpy as np
 
+def region_of_interest(edges):
+    """
+    Apply a mask to keep only the region of the image
+    where lane lines are expected.
+    """
+    height, width = edges.shape
+    mask = np.zeros_like(edges)
+
+    # Define a triangular region of interest
+    polygon = np.array([[
+        (0, height),
+        (width // 2, height // 2),
+        (width, height)
+    ]], dtype=np.int32)
+
+    cv2.fillPoly(mask, polygon, 255)
+    masked_edges = cv2.bitwise_and(edges, mask)
+    return masked_edges
 
 def detect_lanes(frame):
     """
@@ -28,6 +46,8 @@ def detect_lanes(frame):
 
     # Edge detection
     edges = cv2.Canny(blur, 50, 150)
+    edges = region_of_interest(edges)
+
 
     # Detect line segments using Hough Transform
     lines = cv2.HoughLinesP(
