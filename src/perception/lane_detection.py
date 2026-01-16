@@ -27,6 +27,51 @@ def region_of_interest(edges):
     masked_edges = cv2.bitwise_and(edges, mask)
     return masked_edges
 
+def average_lane_lines(lines, image_shape):
+    """
+    Separate left and right lane lines and average them.
+    """
+    left_lines = []
+    right_lines = []
+
+    if lines is None:
+        return None
+
+    for line in lines:
+        x1, y1, x2, y2 = line[0]
+        if x2 == x1:
+            continue
+
+        slope = (y2 - y1) / (x2 - x1)
+
+        # Filter out nearly horizontal lines
+        if abs(slope) < 0.5:
+            continue
+
+        intercept = y1 - slope * x1
+
+        if slope < 0:
+            left_lines.append((slope, intercept))
+        else:
+            right_lines.append((slope, intercept))
+
+    lane_lines = []
+
+    height = image_shape[0]
+    y1 = height
+    y2 = int(height * 0.6)
+
+    for lane in (left_lines, right_lines):
+        if len(lane) == 0:
+            continue
+
+        slope_avg, intercept_avg = np.mean(lane, axis=0)
+        x1 = int((y1 - intercept_avg) / slope_avg)
+        x2 = int((y2 - intercept_avg) / slope_avg)
+        lane_lines.append([[x1, y1, x2, y2]])
+
+    return np.array(lane_lines)
+
 def detect_lanes(frame):
     """
     Detect lane lines from an input frame.
@@ -59,4 +104,6 @@ def detect_lanes(frame):
         maxLineGap=50
     )
 
-    return lines
+    averaged_lines = average_lane_lines(lines, frame.shape)
+    return averaged_lines
+
