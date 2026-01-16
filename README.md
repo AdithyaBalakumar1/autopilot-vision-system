@@ -47,3 +47,7 @@ The system processes a road video stream and outputs:
 An example output video is generated as:
 output_autopilot_demo.mp4
 Run the pipeline and press `Esc` to stop and save the output.
+## Limitations
+- CPU-only inference
+- Classical lane detection (not learning-based)
+- No temporal tracking across frames
